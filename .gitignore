@@ -1,0 +1,20 @@
+# Maven build output
+pharmacy-backend/target/
+
+# Frontend build output
+pharmacy-frontend/dist/
+pharmacy-frontend/node_modules/
+
+# IDE / OS
+.vscode/
+.idea/
+*.iml
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Environment / secrets
+*.env
+application-local.properties

@@ -4,16 +4,19 @@ import com.pharmacy.dto.UserDTO;
 import com.pharmacy.entity.User;
 import com.pharmacy.enums.Role;
 import com.pharmacy.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
-@RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
+
+    public UserService(UserRepository userRepository) {
+        this.userRepository = Objects.requireNonNull(userRepository, "userRepository cannot be null");
+    }
 
     public User createUser(UserDTO dto) {
         User user = new User();
@@ -32,7 +35,7 @@ public class UserService {
     }
 
     public User getById(Long id) {
-        return userRepository.findById(id)
+        return userRepository.findById(Objects.requireNonNull(id, "id cannot be null"))
                 .orElseThrow(() -> new RuntimeException("User not found: " + id));
     }
 }

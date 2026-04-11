@@ -5,15 +5,14 @@ import com.pharmacy.entity.*;
 import com.pharmacy.enums.PrescriptionStatus;
 import com.pharmacy.enums.Severity;
 import com.pharmacy.repository.*;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @Service
-@RequiredArgsConstructor
 public class DispensingService {
 
     private final PrescriptionUploadRepository prescriptionRepo;
@@ -22,8 +21,21 @@ public class DispensingService {
     private final RefillHistoryRepository refillHistoryRepository;
     private final DrugInteractionCheckRepository interactionRepo;
 
+    public DispensingService(
+            PrescriptionUploadRepository prescriptionRepo,
+            UserRepository userRepository,
+            DispensingRecordRepository dispensingRepo,
+            RefillHistoryRepository refillHistoryRepository,
+            DrugInteractionCheckRepository interactionRepo) {
+        this.prescriptionRepo = Objects.requireNonNull(prescriptionRepo, "prescriptionRepo cannot be null");
+        this.userRepository = Objects.requireNonNull(userRepository, "userRepository cannot be null");
+        this.dispensingRepo = Objects.requireNonNull(dispensingRepo, "dispensingRepo cannot be null");
+        this.refillHistoryRepository = Objects.requireNonNull(refillHistoryRepository, "refillHistoryRepository cannot be null");
+        this.interactionRepo = Objects.requireNonNull(interactionRepo, "interactionRepo cannot be null");
+    }
+
     public DispensingRecord dispense(DispensingDTO dto) {
-        PrescriptionUpload p = prescriptionRepo.findById(dto.getPrescriptionId())
+        PrescriptionUpload p = prescriptionRepo.findById(Objects.requireNonNull(dto.getPrescriptionId(), "prescriptionId cannot be null"))
                 .orElseThrow(() -> new RuntimeException("Prescription not found"));
 
         if (p.getStatus() != PrescriptionStatus.APPROVED) {
@@ -46,7 +58,7 @@ public class DispensingService {
             }
         }
 
-        User pharmacist = userRepository.findById(dto.getPharmacistId())
+        User pharmacist = userRepository.findById(Objects.requireNonNull(dto.getPharmacistId(), "pharmacistId cannot be null"))
                 .orElseThrow(() -> new RuntimeException("Pharmacist not found"));
 
         int currentRefills = dispensingRepo.findByPrescriptionUploadId(p.getId()).size();
@@ -67,7 +79,7 @@ public class DispensingService {
     }
 
     public DispensingRecord refill(DispensingDTO dto) {
-        PrescriptionUpload p = prescriptionRepo.findById(dto.getPrescriptionId())
+        PrescriptionUpload p = prescriptionRepo.findById(Objects.requireNonNull(dto.getPrescriptionId(), "prescriptionId cannot be null"))
                 .orElseThrow(() -> new RuntimeException("Prescription not found"));
 
         if (p.getRemainingRefills() <= 0) {
@@ -81,7 +93,7 @@ public class DispensingService {
             throw new RuntimeException("Prescription has expired");
         }
 
-        User pharmacist = userRepository.findById(dto.getPharmacistId())
+        User pharmacist = userRepository.findById(Objects.requireNonNull(dto.getPharmacistId(), "pharmacistId cannot be null"))
                 .orElseThrow(() -> new RuntimeException("Pharmacist not found"));
 
         int refillNum = dispensingRepo.findByPrescriptionUploadId(p.getId()).size() + 1;

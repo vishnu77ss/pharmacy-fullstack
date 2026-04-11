@@ -30,4 +30,60 @@ public class DrugInteractionCheck {
     private String recommendation;
 
     private LocalDateTime checkedAt = LocalDateTime.now();
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public PrescriptionUpload getPrescriptionUpload() {
+        return prescriptionUpload;
+    }
+
+    public void setPrescriptionUpload(PrescriptionUpload prescriptionUpload) {
+        this.prescriptionUpload = prescriptionUpload;
+    }
+
+    public User getPatient() {
+        return patient;
+    }
+
+    public void setPatient(User patient) {
+        this.patient = patient;
+    }
+
+    public String getInteractingMedication() {
+        return interactingMedication;
+    }
+
+    public void setInteractingMedication(String interactingMedication) {
+        this.interactingMedication = interactingMedication;
+    }
+
+    public Severity getSeverity() {
+        return severity;
+    }
+
+    public void setSeverity(Severity severity) {
+        this.severity = severity;
+    }
+
+    public String getRecommendation() {
+        return recommendation;
+    }
+
+    public void setRecommendation(String recommendation) {
+        this.recommendation = recommendation;
+    }
+
+    public LocalDateTime getCheckedAt() {
+        return checkedAt;
+    }
+
+    public void setCheckedAt(LocalDateTime checkedAt) {
+        this.checkedAt = checkedAt;
+    }
 }

@@ -4,16 +4,19 @@ import com.pharmacy.dto.MedicationDTO;
 import com.pharmacy.entity.Medication;
 import com.pharmacy.enums.Schedule;
 import com.pharmacy.repository.MedicationRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
-@RequiredArgsConstructor
 public class MedicationService {
 
     private final MedicationRepository medicationRepository;
+
+    public MedicationService(MedicationRepository medicationRepository) {
+        this.medicationRepository = Objects.requireNonNull(medicationRepository, "medicationRepository cannot be null");
+    }
 
     public Medication create(MedicationDTO dto) {
         Medication m = new Medication();
@@ -51,7 +54,7 @@ public class MedicationService {
     }
 
     public Medication getById(Long id) {
-        return medicationRepository.findById(id)
+        return medicationRepository.findById(Objects.requireNonNull(id, "id cannot be null"))
                 .orElseThrow(() -> new RuntimeException("Medication not found: " + id));
     }
 }

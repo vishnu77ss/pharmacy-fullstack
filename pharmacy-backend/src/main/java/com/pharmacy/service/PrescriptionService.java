@@ -7,14 +7,13 @@ import com.pharmacy.enums.PrescriptionStatus;
 import com.pharmacy.enums.Role;
 import com.pharmacy.enums.Schedule;
 import com.pharmacy.repository.*;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @Service
-@RequiredArgsConstructor
 public class PrescriptionService {
 
     private final PrescriptionUploadRepository prescriptionRepo;
@@ -23,15 +22,28 @@ public class PrescriptionService {
     private final VerificationLogRepository verificationLogRepository;
     private final ControlledSubstanceLogRepository controlledLogRepository;
 
+    public PrescriptionService(
+            PrescriptionUploadRepository prescriptionRepo,
+            UserRepository userRepository,
+            MedicationRepository medicationRepository,
+            VerificationLogRepository verificationLogRepository,
+            ControlledSubstanceLogRepository controlledLogRepository) {
+        this.prescriptionRepo = Objects.requireNonNull(prescriptionRepo, "prescriptionRepo cannot be null");
+        this.userRepository = Objects.requireNonNull(userRepository, "userRepository cannot be null");
+        this.medicationRepository = Objects.requireNonNull(medicationRepository, "medicationRepository cannot be null");
+        this.verificationLogRepository = Objects.requireNonNull(verificationLogRepository, "verificationLogRepository cannot be null");
+        this.controlledLogRepository = Objects.requireNonNull(controlledLogRepository, "controlledLogRepository cannot be null");
+    }
+
     public PrescriptionUpload upload(PrescriptionDTO dto) {
-        User patient = userRepository.findById(dto.getPatientId())
+        User patient = userRepository.findById(Objects.requireNonNull(dto.getPatientId(), "patientId cannot be null"))
                 .orElseThrow(() -> new RuntimeException("Patient not found"));
 
         if (patient.getRole() != Role.PATIENT) {
             throw new RuntimeException("Only patients can upload prescriptions");
         }
 
-        Medication medication = medicationRepository.findById(dto.getMedicationId())
+        Medication medication = medicationRepository.findById(Objects.requireNonNull(dto.getMedicationId(), "medicationId cannot be null"))
                 .orElseThrow(() -> new RuntimeException("Medication not found"));
 
         PrescriptionUpload p = new PrescriptionUpload();
@@ -81,7 +93,7 @@ public class PrescriptionService {
     }
 
     public PrescriptionUpload getById(Long id) {
-        return prescriptionRepo.findById(id)
+        return prescriptionRepo.findById(Objects.requireNonNull(id, "id cannot be null"))
                 .orElseThrow(() -> new RuntimeException("Prescription not found"));
     }
 
@@ -99,7 +111,7 @@ public class PrescriptionService {
             throw new RuntimeException("Prescription has expired (older than 30 days)");
         }
 
-        User pharmacist = userRepository.findById(dto.getPharmacistId())
+        User pharmacist = userRepository.findById(Objects.requireNonNull(dto.getPharmacistId(), "pharmacistId cannot be null"))
                 .orElseThrow(() -> new RuntimeException("Pharmacist not found"));
 
         p.setStatus(PrescriptionStatus.VERIFIED);
@@ -117,7 +129,7 @@ public class PrescriptionService {
     public PrescriptionUpload reject(Long id, VerificationDTO dto) {
         PrescriptionUpload p = getById(id);
 
-        User pharmacist = userRepository.findById(dto.getPharmacistId())
+        User pharmacist = userRepository.findById(Objects.requireNonNull(dto.getPharmacistId(), "pharmacistId cannot be null"))
                 .orElseThrow(() -> new RuntimeException("Pharmacist not found"));
 
         p.setStatus(PrescriptionStatus.REJECTED);
@@ -140,7 +152,7 @@ public class PrescriptionService {
             throw new RuntimeException("Prescription must be VERIFIED before approval");
         }
 
-        User manager = userRepository.findById(managerId)
+        User manager = userRepository.findById(Objects.requireNonNull(managerId, "managerId cannot be null"))
                 .orElseThrow(() -> new RuntimeException("Manager not found"));
 
         if (manager.getRole() != Role.PHARMACY_MANAGER) {
