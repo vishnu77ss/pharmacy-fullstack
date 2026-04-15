@@ -1,5 +1,28 @@
 # Pharmacy Prescription Verification & Controlled Substance Workflow System
 
+## Live Demo
+
+| | URL |
+|---|---|
+| **Frontend** | https://pharmacy-fullstack-chi.vercel.app |
+| **Backend API** | https://pharmacy-backend-yczu.onrender.com/api |
+
+> Note: Backend is hosted on Render's free tier — first request after inactivity may take ~50 seconds to wake up.
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Frontend | React 18 + Vite + Tailwind CSS |
+| Backend | Spring Boot 3 + Java 17 |
+| Database | MySQL (Railway) |
+| Frontend Hosting | Vercel |
+| Backend Hosting | Render (Docker) |
+
+---
+
 ## Project Structure
 
 ```
@@ -9,24 +32,21 @@ pharmacy-frontend/   → React (Vite) + Tailwind CSS
 
 ---
 
-## Backend Setup
+## Local Development
 
-### Prerequisites
-- Java 17+
-- Maven 3.8+
-- MySQL 8+
+### Backend Setup
 
-### Steps
+**Prerequisites:** Java 17+, Maven 3.8+, MySQL 8+
 
 1. Create MySQL database:
 ```sql
 CREATE DATABASE pharmacy_db;
 ```
 
-2. Update credentials in `src/main/resources/application.properties`:
+2. Update credentials in `pharmacy-backend/src/main/resources/application.properties`:
 ```properties
 spring.datasource.username=root
-spring.datasource.password=root
+spring.datasource.password=your_password
 ```
 
 3. Run the backend:
@@ -37,18 +57,18 @@ mvn spring-boot:run
 
 Backend runs at: `http://localhost:8080`
 
-Tables are auto-created by Hibernate on first run.
-
 ---
 
-## Frontend Setup
+### Frontend Setup
 
-### Prerequisites
-- Node.js 18+
-- npm 9+
+**Prerequisites:** Node.js 18+, npm 9+
 
-### Steps
+1. Create `pharmacy-frontend/.env.local`:
+```
+VITE_API_URL=http://localhost:8080/api
+```
 
+2. Run the frontend:
 ```bash
 cd pharmacy-frontend
 npm install
@@ -61,8 +81,8 @@ Frontend runs at: `http://localhost:5173`
 
 ## How to Use
 
-### 1. Login Flow (No real auth — role-based mock)
-- Go to `http://localhost:5173`
+### 1. Login Flow
+- Go to the live URL or `http://localhost:5173`
 - Select a role → Register first if no users exist → Login
 
 ### 2. Role Workflows
